@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📦 Inventory System</h1>
+            <p>Full Stack Portfolio Demo</p>
+        </header>
+
+        <section class="card">
+            <h2>Add New Product</h2>
+            <form id="productForm">
+                <input type="text" id="name" placeholder="Product Name" required>
+                <input type="text" id="category" placeholder="Category" required>
+                <div class="row">
+                    <input type="number" id="quantity" placeholder="Qty" required>
+                    <input type="number" id="price" placeholder="Price ($)" step="0.01" required>
+                </div>
+                <button type="submit">Add to Inventory</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <h2>Current Stock</h2>
+            <div id="inventoryList">
+                </div>
+        </section>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
