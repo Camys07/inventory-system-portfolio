@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="images/favicon-32x32.png" type="image/png">
+  <title>Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Link to your CSS file (adjust path as needed) -->
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
+      background: url('images/homepage_background.png') no-repeat center center fixed;
+      background-size: cover;
+    }
+    main {
+      flex: 1;
+      padding: 40px;
+      background: #f9f9f9;
+      max-width: 960px;
+      margin: 20px auto;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2 {
+      text-align: center;
+      color: #333;
+      margin: 10px 0;
+    }
+    main p {
+      text-align: center;
+      color: #333;
+      margin: 10px 0;
+    }
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: linear-gradient(to right, #8806CE, #d6b4fc);
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+      font-size: 14px;
+    }
+    th {
+      background: linear-gradient(to right, #8806CE, #d6b4fc);
+      color: #fff;
+      text-transform: uppercase;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      color: #fff;
+      background: linear-gradient(to right, #8806CE, #d6b4fc);
+    }
+    #no-progress p {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER & NAVIGATION -->
+  <header>
+    <div class="navbar">
+      <div class="navbar-left">
+        <a href="index.html" class="logo">
+          <img src="images/logo.png" alt="Lab Rat Experiment Logo">
+          <span class="visually-hidden">Lab Rat Experiment</span>
+        </a>
+        <ul class="nav-list">
+          <li><a href="index.html">Home</a></li>
+        
+        <li><a href="about-game.html">About Game</a></li>
+        <li><a href="tutorial.html">Tutorial</a></li>
+        <li id="leaderboard-link" class="hidden"><a href="leaderboard.html">Scoreboard</a></li>
+        
+        <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="navbar-right">
+        <button id="account-button">Account ▼</button>
+        <ul class="dropdown" id="account-dropdown">
+          <!-- These items only appear for logged-in users -->
+          <li id="username-display" class="hidden"><span id="username"></span></li>
+          <li id="profile-link" class="hidden"><a href="profile.html">Profile</a></li>
+          <li id="logout-link" class="hidden"><a href="#" id="logout-button">Logout</a></li>
+          <!-- These are shown for non-authenticated users -->
+          <li id="login-link"><a href="login.html">Login</a></li>
+          <li id="signup-link"><a href="register.html">Sign Up</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+  
+  <main>
+    <section>
+      <h1>Welcome, <span id="user-name"></span>!</h1>
+      <h2>Your Game Progress</h2>
+      <div id="progress-container">
+        <table id="progress-table" class="hidden">
+          <thead>
+            <tr>
+              <th>Level</th>
+              <th>Score</th>
+              <th>Last Played</th>
+            </tr>
+          </thead>
+          <tbody id="progress-body">
+            <!-- Progress data rows will be inserted here -->
+          </tbody>
+        </table>
+        <p id="no-progress">No progress data available.</p>
+      </div>
+    </section>
+  </main>
+  
+  <footer>
+    <p>&copy; 2023 Lab Rat Experiment.</p>
+  </footer>
+  
+  <!-- Account Dropdown Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      var accountButton = document.getElementById("account-button");
+      var accountDropdown = document.getElementById("account-dropdown");
+      accountButton.addEventListener("click", function(e) {
+        e.stopPropagation();
+        accountDropdown.style.display = accountDropdown.style.display === "block" ? "none" : "block";
+      });
+      document.addEventListener("click", function() {
+        accountDropdown.style.display = "none";
+      });
+    });
+  </script>
+  
+  <!-- Firebase Authentication and Firestore Integration -->
+  <script type="module">
+    // Import Firebase modules.
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+    import { getFirestore, collection, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+    
+    // Firebase configuration
+    const firebaseConfig = {
+  apiKey: "AIzaSyB4nNmRWksPDQluiW2R1vi-RkWfPo9KUtI",
+  authDomain: "lab-rat-experiment.firebaseapp.com",
+  projectId: "lab-rat-experiment",
+  storageBucket: "lab-rat-experiment.firebasestorage.app",
+  messagingSenderId: "1005490252081",
+  appId: "1:1005490252081:web:0b6ecb6f448f728f212810"
+};
+    
+    // Initialize Firebase and Firestore.
+    const appFirebase = initializeApp(firebaseConfig);
+    const auth = getAuth(appFirebase);
+    const db = getFirestore(appFirebase);
+    
+    // Monitor authentication state.
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        // Redirect to login if not authenticated.
+        window.location.href = "login.html";
+      } else {
+        // Extract username using displayName if available, otherwise use email.
+        const username = user.displayName ? user.displayName : user.email;
+        // Update welcome header.
+        document.getElementById("user-name").textContent = username;
+        // Update the account button text with a downward arrow.
+        document.getElementById("account-button").textContent = username + " ▼";
+        // Toggle dropdown links for authenticated users.
+        document.getElementById("profile-link").style.display = "block";
+        document.getElementById("logout-link").style.display = "block";
+        document.getElementById("login-link").style.display = "none";
+        document.getElementById("signup-link").style.display = "none";
+        
+        // Fetch the user's game progress from Firestore.
+        try {
+          // Assume that progress data is stored in a "user_progress" collection
+          // with fields: user_id, level, score, progress_date.
+          const progressQuery = query(
+            collection(db, "user_progress"),
+            where("user_id", "==", user.uid),
+            orderBy("progress_date", "desc")
+          );
+          const querySnapshot = await getDocs(progressQuery);
+          const progressData = [];
+          querySnapshot.forEach((doc) => {
+            progressData.push(doc.data());
+          });
+          
+          if (progressData.length > 0) {
+            document.getElementById("progress-table").classList.remove("hidden");
+            const tbody = document.getElementById("progress-body");
+            progressData.forEach((record) => {
+              const tr = document.createElement("tr");
+              
+              const tdLevel = document.createElement("td");
+              tdLevel.textContent = record.level || "N/A";
+              tr.appendChild(tdLevel);
+              
+              const tdScore = document.createElement("td");
+              tdScore.textContent = record.score || "0";
+              tr.appendChild(tdScore);
+              
+              const tdDate = document.createElement("td");
+              tdDate.textContent = record.progress_date || "N/A";
+              tr.appendChild(tdDate);
+              
+              tbody.appendChild(tr);
+            });
+          } else {
+            document.getElementById("no-progress").style.display = "block";
+          }
+        } catch (error) {
+          console.error("Error fetching progress data:", error);
+          document.getElementById("no-progress").style.display = "block";
+        }
+      }
+    });
+    
+    // Logout functionality.
+    const logoutButton = document.getElementById("logout-button");
+    if (logoutButton) {
+      logoutButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        signOut(auth)
+          .then(() => {
+            window.location.href = "login.html";
+          })
+          .catch((error) => {
+            console.error("Error signing out:", error);
+          });
+      });
+    }
+  </script>
+</body>
+</html>

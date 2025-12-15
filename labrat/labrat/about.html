@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="images/favicon-32x32.png" type="image/png">
+  <title>About</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Link to your CSS (adjust the path as needed) -->
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      display: flex;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
+      background: url('images/homepage_background.png') no-repeat center center fixed;
+      background-size: cover;
+    }
+    
+    main {
+      flex: 1;
+      padding: 20px;
+    }
+    
+    .white-container {
+      background: linear-gradient(to right, #8806CE, #d6b4fc);
+      padding: 40px;
+      max-width: 960px;
+      margin: 20px auto;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      color: #333;
+    }
+    
+    .white-container h1,
+    .white-container h2,
+    .white-container p {
+      color: #fff;
+    }
+    
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .gradient-team-container {
+      padding: 40px;
+      border-radius: 8px;
+      margin-top: 20px;
+      color: #fff;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 20px;
+    }
+    
+    .gradient-team-container h2 {
+      text-align: center;
+      width: 100%;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+    
+    .team-member {
+      text-align: center;
+      flex: 1 1 200px;
+      animation: fadeInUp 0.8s ease forwards;
+      transition: transform 0.3s ease;
+    }
+    
+    .team-member:nth-child(1) { animation-delay: 0.2s; }
+    .team-member:nth-child(2) { animation-delay: 0.4s; }
+    .team-member:nth-child(3) { animation-delay: 0.6s; }
+    .team-member:nth-child(4) { animation-delay: 0.8s; }
+    
+    .team-member img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border: 4px solid #fff;
+      transition: transform 0.3s ease;
+    }
+    
+    .team-member:hover img {
+      transform: scale(1.1);
+    }
+    
+    .team-member:hover {
+      transform: translateY(-5px);
+    }
+    
+    .team-member p {
+      color: #fff;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: linear-gradient(to right, #8806CE, #d6b4fc);
+    }
+    
+    footer p {
+      color: #fff;
+    }
+    
+    /* Helper class to hide elements initially */
+    .hidden {
+      display: none;
+    }
+    
+    @media (max-width: 768px) {
+      .nav-list {
+        padding-right: 20px;
+        flex-direction: column;
+        align-items: center;
+      }
+      .gradient-team-container {
+        flex-direction: column;
+        padding: 20px;
+      }
+      .team-member {
+        flex: 1 1 auto;
+        margin-bottom: 20px;
+        max-width: 300px;
+        width: 100%;
+      }
+      .team-member img {
+        width: 120px;
+        height: 120px;
+      }
+      .white-container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER & NAVIGATION -->
+  <!--<header> -->
+    <div class="navbar">
+      <div class="navbar-left">
+        <a href="index.html" class="logo">
+          <img src="images/logo.png" alt="Lab Rat Experiment Logo">
+          <span class="visually-hidden">Lab Rat Experiment</span>
+        </a>
+        <ul class="nav-list">
+          <li><a href="index.html">Home</a></li>
+        <li><a href="about-game.html">About Game</a></li>
+        <li><a href="tutorial.html" >Tutorial</a></li>
+        <li id="leaderboard-link" class="hidden"><a href="leaderboard.html">Scoreboard</a></li>
+        
+        <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="navbar-right">
+        <button id="account-button">Account ▼</button>
+        <ul class="dropdown" id="account-dropdown">
+          <!-- These items only appear for logged-in users -->
+          <li id="username-display" class="hidden"><span id="username"></span></li>
+          <li id="profile-link" class="hidden"><a href="profile.html">Profile</a></li>
+          <li id="logout-link" class="hidden"><a href="#" id="logout-button">Logout</a></li>
+          <!-- These are shown for non-authenticated users -->
+          <li id="login-link"><a href="login.html">Login</a></li>
+          <li id="signup-link"><a href="register.html">Sign Up</a></li>
+        </ul>
+      </div>
+    </div>
+ <!-- </header> -->
+  
+  <!-- MAIN CONTENT -->
+  <main>
+    <div class="white-container">
+      <section id="about-info">
+         <h1>About Lab Rat Experiment</h1>
+         <p>
+           We are a passionate team blending science, gaming, and education into one immersive experience.
+           Our vision is to revolutionize how scientific concepts are taught—by making every experiment interactive 
+           and every puzzle engaging.
+         </p>
+         <!-- Team Section -->
+         <div class="gradient-team-container">
+           <h2>Our Team</h2>
+           <div class="team-member">
+             <img src="../images/lalaguna.png" alt="Project Manager/Programmer">
+             <h3>Project Manager/Programmer</h3>
+             <p>Camille Precious D. Lalaguna – pioneering interactive game systems.</p>
+           </div>
+           <div class="team-member">
+             <img src="../images/Briones.jpg" alt="Graphics Designer">
+             <h3>Graphics Designer</h3>
+             <p>Lhean Joy Briones – fusing creativity with scientific realism.</p>
+           </div>
+           <div class="team-member">
+             <img src="../images/perez.jpg" alt="Web Designer">
+             <h3>Data Analyst</h3>
+             <p>Russel James Perez – ensuring every experiment’s accuracy.</p>
+           </div>
+           <div class="team-member">
+             <img src="../images/ordona.jpg" alt="Data Analyst">
+             <h3>Documentation</h3>
+             <p>Alvin Carl Ordona – connecting gamers and science enthusiasts.</p>
+           </div>
+         </div>
+         <!-- End of Team Section -->
+      </section>
+    </div>
+  </main>
+  
+  <!-- FOOTER -->
+  <footer>
+     <p>&copy; 2025 Lab Rat Experiment. All rights reserved.</p>
+  </footer>
+  
+  <!-- Firebase Initialization & Authentication Handling -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+    
+    // Firebase configuration
+    const firebaseConfig = {
+  apiKey: "AIzaSyB4nNmRWksPDQluiW2R1vi-RkWfPo9KUtI",
+  authDomain: "lab-rat-experiment.firebaseapp.com",
+  projectId: "lab-rat-experiment",
+  storageBucket: "lab-rat-experiment.firebasestorage.app",
+  messagingSenderId: "1005490252081",
+  appId: "1:1005490252081:web:0b6ecb6f448f728f212810"
+};
+    
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    
+    // Listen for authentication state changes and update navigation accordingly.
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User signed in:", user);
+        // Derive a username (displayName or from the email)
+        const username = user.displayName || (user.email ? user.email.split('@')[0] : "User");
+        document.getElementById("account-button").textContent = username + " ▼";
+  
+        // Show authenticated-only links.
+        document.getElementById("leaderboard-link").style.display = "block";
+        document.getElementById("profile-link").style.display = "block";
+        document.getElementById("logout-link").style.display = "block";
+  
+        // Hide non-authenticated actions.
+        document.getElementById("login-link").style.display = "none";
+        document.getElementById("signup-link").style.display = "none";
+      } else {
+        // If not signed in, hide authenticated-only links.
+        document.getElementById("leaderboard-link").style.display = "none";
+        document.getElementById("profile-link").style.display = "none";
+        document.getElementById("logout-link").style.display = "none";
+  
+        // Show non-authenticated actions.
+        document.getElementById("login-link").style.display = "block";
+        document.getElementById("signup-link").style.display = "block";
+  
+        // Reset account button text.
+        document.getElementById("account-button").textContent = "Account ▼";
+      }
+    });
+  
+    // Logout functionality.
+    document.getElementById("logout-button")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      signOut(auth)
+        .then(() => {
+          console.log("User signed out.");
+        })
+        .catch((error) => {
+          console.error("Error signing out:", error);
+        });
+    });
+  </script>
+  
+  <!-- Account Dropdown Logic -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      const accountButton = document.getElementById("account-button");
+      const accountDropdown = document.getElementById("account-dropdown");
+      accountButton.addEventListener("click", function(e) {
+        e.stopPropagation();
+        // Toggle dropdown display.
+        accountDropdown.style.display = accountDropdown.style.display === "block" ? "none" : "block";
+      });
+      document.addEventListener("click", function() {
+        accountDropdown.style.display = "none";
+      });
+    });
+  </script>
+</body>
+</html>

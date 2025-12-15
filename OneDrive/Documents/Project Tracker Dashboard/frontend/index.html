@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Project Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card input-section">
+            <h2>Add New Project</h2>
+            <form id="projectForm">
+                <input type="text" id="title" placeholder="Project Title" required>
+                <select id="category">
+                    <option value="Web Development">Web Development</option>
+                    <option value="Networking">Networking</option>
+                    <option value="UI/UX">UI/UX</option>
+                </select>
+                <textarea id="description" placeholder="Project Description"></textarea>
+                <button type="submit">Add Project</button>
+            </form>
+        </div>
+
+        <div class="card list-section">
+            <h2>Project List</h2>
+            <div id="projectList">Loading projects...</div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="images/favicon-32x32.png" type="image/png">
+  <title>Lab Rat Experiment: The Scientific Method Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  <style>
+    /* Base Reset */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: url('images/homepage_background.png') no-repeat center center fixed;
+      background-size: cover;
+    }
+    main {
+      display: block;
+      padding: 50px 30px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: linear-gradient(to right, #8806CE, #d6b4fc);
+    }
+    
+    footer p {
+      color: #fff;
+    }
+    /* IMAGE AND TEXT SECTION */
+    .image-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .image-content img {
+      max-width: 350px;
+      height: auto;
+      border-radius: 10px;
+      display: block;
+    }
+
+    .text-content {
+      max-width: 900px;
+      margin: 0 auto 50px;
+      padding: 0 20px;
+    }
+
+    .text-box {
+      background-color: #b266ff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      transition: transform 0.5s ease-in-out;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .text-box:hover {
+      transform: translateY(-10px);
+    }
+
+    .text-box h2 {
+      font-size: 1.3em;
+      margin-bottom: 15px;
+      color: #ffffff;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .text-box h1 {
+      font-size: 2.2em;
+      margin-bottom: 15px;
+      text-align: center;
+      font-weight: bold;
+      color: white;
+    }
+
+    .text-box p {
+      font-size: 1.1em;
+      text-align: justify;
+      color: #f0e6ff;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .text-content h2 {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .text-content h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: white;
+      font-weight: bold;
+    }
+
+    .text-content p {
+      font-size: 1.1em;
+      color: #f0e6ff;
+      text-align: justify;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .highlight {
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    /* TWO-COLUMN MISSION/VISION SECTION */
+    .two-column-section {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .two-column-section .column {
+      background-color: #b266ff;
+      border-radius: 10px;
+      padding: 20px;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      width: 460px;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: justify;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease forwards;
+      transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease;
+      will-change: transform;
+    }
+
+    .two-column-section .column:hover {
+      transform: scale(1.08);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 15px #b266ff;
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .two-column-section .left-column {
+      animation-delay: 0.2s;
+    }
+
+    .two-column-section .right-column {
+      animation-delay: 0.4s;
+    }
+
+    .two-column-section .column h2 {
+      text-align: center;
+      text-transform: capitalize;
+    }
+
+    .two-column-section .column p {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    @media (max-width: 768px) {
+      .nav-list {
+        padding-right: 0;
+        flex-direction: column;
+        align-items: center;
+      }
+      .two-column-section {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    .section-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    @media (max-width: 768px) {
+    .text-box {
+        padding: 20px;
+    }
+
+    .text-box h1 {
+        font-size: 1.8em;
+    }
+
+    .text-box p {
+        font-size: 1em;
+    }
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="navbar">
+      <div class="navbar-left">
+        <a href="index.html" class="logo">
+          <img src="images/logo.png" alt="Lab Rat Experiment Logo">
+          <span class="visually-hidden">Lab Rat Experiment</span>
+        </a>
+        <ul class="nav-list">
+          <li><a href="index.html">Home</a></li>
+        <li><a href="about-game.html" class="active">About Game</a></li>
+        <li><a href="tutorial.html" >Tutorial</a></li>
+        <li id="leaderboard-link" class="hidden"><a href="leaderboard.html">Scoreboard</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="navbar-right">
+        <button id="account-button">Account ▼</button>
+        <ul class="dropdown" id="account-dropdown">
+          <!-- These items only appear for logged-in users -->
+          <li id="username-display" class="hidden"><span id="username"></span></li>
+          <li id="profile-link" class="hidden"><a href="profile.html">Profile</a></li>
+          <li id="logout-link" class="hidden"><a href="#" id="logout-button">Logout</a></li>
+          <!-- These are shown for non-authenticated users -->
+          <li id="login-link"><a href="login.html">Login</a></li>
+          <li id="signup-link"><a href="register.html">Sign Up</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+  <!-- MAIN SECTION -->
+  <main>
+    <div class="image-content">
+      <img src="/images/logo.png" alt="Lab Rat Experiment">
+    </div>
+
+    <div class="section-wrapper">
+        <div class="text-content">
+            <div class="text-box">
+                <h2 class="highlight">Want to know about Lab Rat Experiment?</h2>
+                <h1>Scientific Method Game!</h1>
+                <p>Lab Rat Experiment is a mobile educational game designed to help Junior High School and Senior High School students master the scientific method through 
+                    interactive gameplay. Set in a virtual laboratory, players explore six distinct levels that cover each step of the scientific method, from observation 
+                    to experimentation and analysis. With a Bookworm-inspired narrative that drives discovery and problem-solving, students engage in hands-on virtual 
+                    experiments such as chemical purification, microscope analysis, and pH testing. The game features interactive tutorials, gamified challenges, and 
+                    feedback mechanisms—such as humorous lab rat responses—that reinforce learning in an engaging and immersive way. Tailored for schools with limited 
+                    access to physical labs, Lab Rat Experiment provides a dynamic, accessible learning experience that bridges theoretical knowledge with practical 
+                    application, empowering students to develop both scientific skills and critical thinking in a fun and innovative way.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-wrapper">
+        <div class="text-content">
+            <div class="text-box">
+                <h1>🎮 Lab Rat Experiment: The Scientific Method Game</h1>
+                <p style="margin-bottom: 25px;">Lab Rat Experiment is a mobile educational game designed to make science exciting and accessible for Junior and 
+                  Senior High School students. Through a series of interactive levels inspired by the steps of the scientific method, 
+                  players explore a mysterious laboratory, collect and analyze data, conduct virtual experiments, and uncover the truth behind a scientific anomaly—all while guided by quirky lab rats.</p>
+                <p>🎮 Features:</p>
+                <p>🧫 Bookworm-Inspired Learning – Solve scientific puzzles using a 
+                  gamified step-by-step process built around observation, experimentation, and conclusion.</p>
+                <p>🔬 Virtual Lab Equipment – Heat, stir, purify, and test chemicals 
+                  using interactive tools in a fully simulated environment.</p>
+                <p>🐀 Lab Rat Feedback System – Get instant reactions and hilarious commentary from virtual test rats based on your experimental success—or failure.</p>
+                <p>📊 Offline & Online Modes – Learn at your own pace in offline single-player, or 
+                  join the online multiplayer lab to compete, collaborate, or challenge your classmates.</p>
+                <p>🏆 Score History & Leaderboards – Track your experiment scores, 
+                  see your scientific growth, and climb the global or school-wide leaderboard.</p>
+                <p>📖 Guided Experiments – Each level is designed around a core step of the scientific method, 
+                  from forming hypotheses to analyzing results, reinforcing practical knowledge through play.</p>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="section-wrapper">
+        <div class="text-content">
+            <div class="text-box">
+                <h2 class="highlight">Game Requirements</h2>
+                <h3>Supported OS</h3>
+                <p>Android 13.0 above.</p>
+                <h3>RAM</h3>
+                <p>Minimum 2GB required.</p>
+                <h3>Storage</h3>
+                <p>At least 3GB free space.</p>
+                <h3>Connectivity</h3>
+                <p>Internet connection for updates.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MISSION AND VISION SECTION -->
+    <div class="two-column-section">
+      <div class="column left-column">
+        <h2>Mission</h2>
+        <p>Our mission is to enhance the scientific literacy of Junior and Senior High School students by transforming complex scientific concepts into interactive learning experiences. Through Lab Rat Experiment, we aim to:</p>
+        <ul>
+          <li>Empower learners to master the scientific method using gamified, discovery-based simulations.</li>
+          <li>Provide inclusive access to hands-on virtual experiments for schools with limited laboratory infrastructure.</li>
+          <li>Promote critical thinking, curiosity, and deeper conceptual understanding through a Bookworm-inspired educational framework.</li>
+        </ul>
+      </div>
+      <div class="column right-column">
+        <h2>Vision</h2>
+        <p>To become a leading force in transforming science education by harnessing the power of gamification and technology, inspiring a new generation of learners to think critically, experiment fearlessly, and explore the world through the lens of scientific inquiry.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2025 Lab Rat Experiment. All rights reserved.</p>
+  </footer>
+<!-- Firebase Initialization & Authentication Handling -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+    
+    // Firebase configuration
+    const firebaseConfig = {
+  apiKey: "AIzaSyB4nNmRWksPDQluiW2R1vi-RkWfPo9KUtI",
+  authDomain: "lab-rat-experiment.firebaseapp.com",
+  projectId: "lab-rat-experiment",
+  storageBucket: "lab-rat-experiment.firebasestorage.app",
+  messagingSenderId: "1005490252081",
+  appId: "1:1005490252081:web:0b6ecb6f448f728f212810"
+};
+    
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    
+    // Listen for authentication state changes and update navigation accordingly.
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User signed in:", user);
+        // Derive a username (displayName or from the email)
+        const username = user.displayName || (user.email ? user.email.split('@')[0] : "User");
+        document.getElementById("account-button").textContent = username + " ▼";
+  
+        // Show authenticated-only links.
+        document.getElementById("leaderboard-link").style.display = "block";
+        document.getElementById("profile-link").style.display = "block";
+        document.getElementById("logout-link").style.display = "block";
+  
+        // Hide non-authenticated actions.
+        document.getElementById("login-link").style.display = "none";
+        document.getElementById("signup-link").style.display = "none";
+      } else {
+        // If not signed in, hide authenticated-only links.
+        document.getElementById("leaderboard-link").style.display = "none";
+        document.getElementById("profile-link").style.display = "none";
+        document.getElementById("logout-link").style.display = "none";
+  
+        // Show non-authenticated actions.
+        document.getElementById("login-link").style.display = "block";
+        document.getElementById("signup-link").style.display = "block";
+  
+        // Reset account button text.
+        document.getElementById("account-button").textContent = "Account ▼";
+      }
+    });
+  
+    // Logout functionality.
+    document.getElementById("logout-button")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      signOut(auth)
+        .then(() => {
+          console.log("User signed out.");
+        })
+        .catch((error) => {
+          console.error("Error signing out:", error);
+        });
+    });
+  </script>
+  
+  <!-- Account Dropdown Logic -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      const accountButton = document.getElementById("account-button");
+      const accountDropdown = document.getElementById("account-dropdown");
+      accountButton.addEventListener("click", function(e) {
+        e.stopPropagation();
+        // Toggle dropdown display.
+        accountDropdown.style.display = accountDropdown.style.display === "block" ? "none" : "block";
+      });
+      document.addEventListener("click", function() {
+        accountDropdown.style.display = "none";
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="images/favicon-32x32.png" type="image/png">
+  <title>Scoreboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="adm_styles.css">
+</head>
+<body>
+  <!-- Sidebar navigation -->
+  <div class="sidebar">
+    <div>
+      <!-- Logo area: image and dynamic admin text -->
+      <a href="admin_dashboard.html" class="logo">
+        <img src="images/logo.png" alt="Lab Rat Experiment Logo">
+        <span class="admin-text">Admin</span>
+      </a>
+      <a href="admin_dashboard.html">Dashboard</a>
+      <a href="leaderboard_admin.html">Scoreboard</a>
+      <a href="inquirys.html">Inquiries</a>
+    </div>
+    <!-- Logout button placed at the bottom of the sidebar -->
+    <button id="logout-button">Logout</button>
+  </div>
+  
+  <!-- Main content -->
+  <div class="content">
+    <h1>Scoreboard Admin</h1>
+    <table id="ScoreTable">
+      <thead>
+        <tr>
+          <th data-sort="playerName">Player Name</th>
+          <th data-sort="score">Score</th>
+          <th data-sort="level">Level</th>
+          <th data-sort="completionTime">Completion Time (sec)</th>
+          <th data-sort="currentLevel">Current Level</th>
+          <th data-sort="dateAchieved">Date Achieved</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body">
+        <!-- Dynamic leaderboard entries will be inserted here -->
+      </tbody>
+    </table>
+    <div id="pagination"></div>
+  </div>
+  
+  <!-- Include Firebase Compat Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+  
+  <!-- Include the IIFE-based api.js -->
+  <script src="api.js"></script>
+  
+  <!-- IIFE Based Leaderboard Admin Script -->
+  <script>
+    (function(){
+      // Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyB4nNmRWksPDQluiW2R1vi-RkWfPo9KUtI",
+        authDomain: "lab-rat-experiment.firebaseapp.com",
+        projectId: "lab-rat-experiment",
+        storageBucket: "lab-rat-experiment.firebasestorage.app",
+        messagingSenderId: "1005490252081",
+        appId: "1:1005490252081:web:0b6ecb6f448f728f212810"
+      };
+
+      // Initialize Firebase if not already initialized.
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+      var auth = firebase.auth();
+
+      // Update admin text on auth state change.
+      auth.onAuthStateChanged(function(user) {
+        if (user) {
+          var username = user.displayName || (user.email ? user.email.split('@')[0] : "Admin");
+          document.querySelector(".admin-text").textContent = username;
+          // Load the leaderboard only if the user is authenticated.
+          loadLeaderboardPage(1);
+        } else {
+          // If not authenticated, update the content section.
+          document.querySelector(".content").innerHTML = "<h1>Not authenticated</h1>";
+        }
+      });
+
+      // Attach logout functionality.
+    document.getElementById("logout-button")?.addEventListener("click", function(e) {
+      e.preventDefault();
+      auth.signOut()
+        .then(function() {
+          console.log("User signed out.");
+          window.location.href = "login.html"; // Redirect to login after logout.
+        })
+        .catch(function(error) {
+          console.error("Sign-out error:", error);
+        });
+    });
+
+      // Helper function to format timestamps.
+      function formatTimestamp(timestamp) {
+        if (!timestamp) return "N/A";
+        if (timestamp.seconds) {
+          return new Date(timestamp.seconds * 1000).toLocaleString();
+        }
+        return new Date(timestamp).toLocaleString();
+      }
+
+      // Leaderboard variables.
+      var BASE_URL = "https://labratbackend-production.up.railway.app";
+      var leaderboardCache = {}; // cache for leaderboard pages
+      var currentPage = 1;
+      var pageSize = 10;
+      var currentSortField = "dateAchieved";
+      var currentSortOrder = "desc";
+
+      // Render leaderboard data.
+      function renderLeaderboard(data) {
+        var tbody = document.getElementById("leaderboard-body");
+        tbody.innerHTML = "";
+        var fragment = document.createDocumentFragment();
+        data.forEach(function(record) {
+          var row = document.createElement("tr");
+
+          var cellPlayer = document.createElement("td");
+          cellPlayer.textContent = record.playerName || "N/A";
+          row.appendChild(cellPlayer);
+
+          var cellScore = document.createElement("td");
+          cellScore.textContent = record.score !== undefined ? record.score : "0";
+          row.appendChild(cellScore);
+
+          var cellLevel = document.createElement("td");
+          cellLevel.textContent = record.level !== undefined ? record.level : "0";
+          row.appendChild(cellLevel);
+
+          var cellCompletion = document.createElement("td");
+          cellCompletion.textContent = record.completionTime !== undefined ? record.completionTime : "N/A";
+          row.appendChild(cellCompletion);
+
+          var cellCurrentLevel = document.createElement("td");
+          cellCurrentLevel.textContent = record.currentLevel !== undefined ? record.currentLevel : "N/A";
+          row.appendChild(cellCurrentLevel);
+
+          var cellDate = document.createElement("td");
+          if (record.dateAchieved) {
+            if (typeof record.dateAchieved === "object" && "seconds" in record.dateAchieved) {
+              cellDate.textContent = new Date(record.dateAchieved.seconds * 1000).toLocaleString();
+            } else {
+              cellDate.textContent = record.dateAchieved;
+            }
+          } else {
+            cellDate.textContent = "N/A";
+          }
+          row.appendChild(cellDate);
+
+          fragment.appendChild(row);
+        });
+        tbody.appendChild(fragment);
+      }
+
+      // Get ID token helper.
+      async function getIdToken() {
+        var user = auth.currentUser;
+        if (!user) throw new Error("User is not authenticated.");
+        return await user.getIdToken();
+      }
+
+      // Fetch leaderboard page from backend.
+      async function fetchLeaderboardPage(page) {
+        try {
+          var token = await getIdToken();
+          var url = BASE_URL + "/getLeaderboard?page=" + page + "&sortField=" + currentSortField + "&sortOrder=" + currentSortOrder;
+          var response = await fetch(url, {
+            headers: { "Authorization": "Bearer " + token }
+          });
+          if (!response.ok) {
+            var errorData = await response.json();
+            throw new Error(errorData.error || "Error fetching leaderboard data.");
+          }
+          var data = await response.json();
+          leaderboardCache[page] = data.submissions;
+          return data.submissions;
+        } catch (error) {
+          console.error("Error in fetchLeaderboardPage:", error);
+          throw error;
+        }
+      }
+
+      // Load leaderboard page (with caching).
+      async function loadLeaderboardPage(page) {
+        currentPage = page;
+        var data;
+        if (leaderboardCache[page]) {
+          data = leaderboardCache[page];
+        } else {
+          data = await fetchLeaderboardPage(page);
+        }
+        renderLeaderboard(data);
+        updatePaginationControls();
+        // Preload next page.
+        if (!leaderboardCache[page + 1]) {
+          fetchLeaderboardPage(page + 1).catch(function(err) {
+            console.error("Preload error:", err);
+          });
+        }
+      }
+
+      // Update pagination controls.
+      function updatePaginationControls() {
+        var paginationDiv = document.getElementById("pagination");
+        paginationDiv.innerHTML = "";
+
+        var prevButton = document.createElement("button");
+        prevButton.textContent = "Previous";
+        prevButton.disabled = (currentPage === 1);
+        prevButton.addEventListener("click", function() {
+          if (currentPage > 1) loadLeaderboardPage(currentPage - 1);
+        });
+        paginationDiv.appendChild(prevButton);
+
+        var pageDisplay = document.createElement("span");
+        pageDisplay.style.margin = "0 10px";
+        pageDisplay.textContent = "Page " + currentPage;
+        paginationDiv.appendChild(pageDisplay);
+
+        var nextButton = document.createElement("button");
+        nextButton.textContent = "Next";
+        // Disable Next if current page's submissions are less than pageSize.
+        if (leaderboardCache[currentPage] && leaderboardCache[currentPage].length < pageSize) {
+          nextButton.disabled = true;
+        }
+        nextButton.addEventListener("click", function() {
+          loadLeaderboardPage(currentPage + 1);
+        });
+        paginationDiv.appendChild(nextButton);
+      }
+
+      // Attach header sorting events when the DOM is loaded.
+      document.addEventListener("DOMContentLoaded", function() {
+        var headerCells = document.querySelectorAll("thead th[data-sort]");
+        headerCells.forEach(function(th) {
+          th.addEventListener("click", function() {
+            var field = th.getAttribute("data-sort");
+            if (currentSortField === field) {
+              currentSortOrder = (currentSortOrder === "asc") ? "desc" : "asc";
+            } else {
+              currentSortField = field;
+              currentSortOrder = "asc";
+            }
+            leaderboardCache = {};
+            loadLeaderboardPage(1);
+          });
+        });
+      });
+      
+      // Note: The call to loadLeaderboardPage(1) is now handled within the auth state listener.
+    })();
+  </script>
+</body>
+</html>
